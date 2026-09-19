@@ -1,6 +1,27 @@
 # Đăng nhập bằng câu hỏi nội bộ
 > Biến rào cản bảo mật thành văn hóa chia sẻ kiến thức trong đội ngũ Engineering
 
+**Nguyên tắc:**
+* Người hiểu hệ thống nên có con đường đi nhanh hơn
+* Điều này cũng tạo ra một feedback loop:
+  ```
+  Knowledge check
+        │
+        ▼
+  Phát hiện khoảng trống kiến thức
+        │
+        ▼
+  Team giải thích / cập nhật documentation
+        │
+        ▼
+  Quy trình rõ ràng hơn
+        │
+        ▼
+  Knowledge check tốt hơn
+  ```
+
+> **Nếu một câu hỏi thường xuyên bị trả lời sai**, đó có thể là dấu hiệu rằng documentation hoặc quy trình chưa đủ rõ — không nhất thiết là vấn đề của người dùng
+
 #### Hình ảnh minh họa hệ thống
 * Update password vào file config.json
 <table>
@@ -74,9 +95,8 @@
   </tr>
 </table>
 
-
 **Tư duy thiết kế**
-* > *Security không nhất thiết phải làm mọi thứ khó hơn*
+> *Security không nhất thiết phải làm mọi thứ khó hơn*
 
 Thay vào đó:
 * **Làm cho việc làm đúng trở nên dễ hơn,** và **việc làm sai/bypass trở nên khó hơn**
@@ -87,36 +107,17 @@ Cụ thể:
 * Hệ thống hỏi 
     > Bạn có thực sự hiểu hệ thống bạn sắp thao tác không?
 
-* Tương tự, DevOps engineer đã quen với hệ thống nên **có thể trả lời nhanh:**
-    > * Service này owner là ai?
-    > * Deploy đi qua đâu?
-    > * Incident channel nào?
+* Vì DevOps engineer đã quen với hệ thống nên **có thể trả lời nhanh:**
+    > * Ai là owner của một service?
+    > * Production deployment đi qua quy trình nào?
+    > * Incident được điều phối ở đâu?
+    > * Source of truth của configuration là gì?
+    > * Khi deployment thất bại thì rollback như thế nào?
 
-* **Người không có context vẫn có thể xác thực** bằng một phương thức mạnh hơn
+* **Người không có context vẫn có thể xác thực** bằng một phương thức mạnh hơn như *password/MFA/...*
 
-Như vậy security control đồng thời **tạo ra một động lực để mọi người:**
-* hiểu hệ thống mình đang vận hành
-* biết quy trình của team
-* cập nhật documentation / chia sẻ kiến thức
-* **phát hiện những điểm chưa rõ trong quy trình**
 
-🎯 **Giá trị Mang lại (Business & Team Impact)**
-| Khía cạnh |Giá trị đạt được |
-| --- | --- |
-| Developer Experience (DX) | **Giảm ma sát cho thao tác hàng ngày** đối với engineer đã nắm rõ context| 
-| Culture & Knowledge | Tự động hóa việc nhắc nhở quy trình, owner của service, kênh điều phối incident |
-| Process Visibility | Ghi log thống kê các câu hỏi bị trả lời sai nhiều nhất $\rightarrow$ Input trực tiếp để cập nhật tài liệu | 
-|  Security Risk Control | Tạo ra rào cản tức thì với các đợt quét tự động (Automated Scripts) hoặc Credential Stuffing đơn giản chưa hiểu context nội bộ | 
-
-**Ý tưởng**
-Trong một tổ chức, có những thông tin không nhất thiết phải là secret nhưng thường chỉ người đang làm việc trong team mới biết:
-* Ai là owner của một service?
-* Production deployment đi qua quy trình nào?
-* Incident được điều phối ở đâu?
-* Source of truth của configuration là gì?
-* Khi deployment thất bại thì rollback như thế nào?
-
-Những câu hỏi này không nhằm thay thế password hay MFA.
+**Những câu hỏi này không nhằm thay thế password hay MFA**
 > Chúng tạo ra một knowledge check trước khi cho phép tiếp tục
 
 * Nếu người dùng trả lời đúng, họ có thể vào shell ngay
@@ -148,29 +149,20 @@ Những câu hỏi này không nhằm thay thế password hay MFA.
                                ▼
                         Interactive Shell
 ```
-**Mục tiêu**
-> Dự án hướng tới việc biến security từ một lớp kiểm soát gây friction thành một phần của văn hóa học tập trong doanh nghiệp
 
-**Nguyên tắc:**
-* Người hiểu hệ thống nên có con đường đi nhanh hơn.
-* Điều này cũng tạo ra một feedback loop:
-```
-Knowledge check
-       │
-       ▼
-Phát hiện khoảng trống kiến thức
-       │
-       ▼
-Team giải thích / cập nhật documentation
-       │
-       ▼
-Quy trình rõ ràng hơn
-       │
-       ▼
-Knowledge check tốt hơn
-```
+Hệ quả của dự án **tạo ra một động lực để mọi người:**
+* hiểu hệ thống mình đang vận hành
+* biết quy trình của team
+* cập nhật documentation / chia sẻ kiến thức
+* **phát hiện những điểm chưa rõ trong quy trình**
 
-> **Nếu một câu hỏi thường xuyên bị trả lời sai**, đó có thể là dấu hiệu rằng documentation hoặc quy trình chưa đủ rõ — không nhất thiết là vấn đề của người dùng
+🎯 **Giá trị Mang lại (Business & Team Impact)**
+| Khía cạnh |Giá trị đạt được |
+| --- | --- |
+| Developer Experience (DX) | **Giảm ma sát cho thao tác hàng ngày** đối với engineer đã nắm rõ context| 
+| Culture & Knowledge | Tự động hóa việc nhắc nhở quy trình, owner của service, kênh điều phối incident |
+| Process Visibility | Ghi log thống kê các câu hỏi bị trả lời sai nhiều nhất $\rightarrow$ Nguồn thông tin trực tiếp để cập nhật tài liệu | 
+|  Security Risk Control | **Tạo ra rào cản tức thì** với các đợt quét tự động (Automated Scripts) hoặc Credential Stuffing đơn giản chưa hiểu context nội bộ | 
 
 **Tính năng**
 * Câu hỏi được chọn ngẫu nhiên
@@ -331,6 +323,16 @@ Kiểm tra:
 ./unlock.sh
 ```
 
+Cài đặt vào một user cụ thể
+```
+sudo make install USER=thanhgit
+```
+
+Xóa cài đặt ở một user cụ thể
+```
+sudo make uninstall USER=thanhgit
+```
+
 Thêm vào file khởi tạo shell của user (ví dụ: ~/.bashrc hoặc ~/.zshrc):
 ```bash
 # Add to the very end of ~/.bashrc
@@ -339,7 +341,7 @@ if [ -t 1 ]; then
 fi 
 ```
 
-**Luồng xác thực** mỗi lần chạy chương trình:
+### **Luồng xác thực** mỗi lần chạy chương trình:
 * Xác định ngày hiện tại
 * Xác định thời gian hiện tại
 * Tìm policy phù hợp trong *config.json*
