@@ -200,7 +200,7 @@ Ví dụ:
 Ví dụ:
 ```json
 {
-  "schedule": [
+  "rules": [
     {
       "name": "weekday_evening",
       "days": [
