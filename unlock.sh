@@ -65,8 +65,7 @@ QUESTION_COUNT=$(
         --arg time "$(date '+%H:%M')" '
         .rules[]
         | select(
-            $day >= .day_from
-            and $day <= .day_to
+            (.days | index($day)) != null
             and $time >= .time_from
             and $time <= .time_to
         )
@@ -105,12 +104,14 @@ mapfile -t QUESTION_IDS < <(
 correct=0
 answered=0
 
+CURRENT_TIME=$(date +"%A %d/%m/%Y %H:%M")
 gum style \
     --border double \
     --border-foreground 212 \
     --padding "1 2" \
     "DevOps Knowledge Check" \
-    "$QUESTION_COUNT câu hỏi được chọn ngẫu nhiên"
+    "Hiện tại là: $CURRENT_TIME" \
+    "=> $QUESTION_COUNT câu hỏi được chọn ngẫu nhiên"
 
 # --------------------------------------------------
 # Ask questions
