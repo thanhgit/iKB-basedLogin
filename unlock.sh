@@ -176,7 +176,8 @@ if (( correct == QUESTION_COUNT )); then
         --padding "1 2" \
         "✓ Knowledge check passed"
 
-    exec "${SHELL:-/bin/bash}" -l
+    exit 0
+    # exec "${SHELL:-/bin/bash}" -l
 fi
 
 # --------------------------------------------------
@@ -238,6 +239,7 @@ if verify_password "$password" "$PASSWORD_HASH"; then
         --foreground 82 \
         "✓ Authentication successful"
 
+    exit 0
     # exec "${SHELL:-/bin/bash}" -l
 else
 
