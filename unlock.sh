@@ -3,104 +3,232 @@
 set -euo pipefail
 
 QUESTIONS_FILE="${QUESTIONS_FILE:-./questions.json}"
+CONFIG_FILE="${CONFIG_FILE:-./config.json}"
 
-# Password fallback.
-# Production: lấy từ secret manager, không hard-code vào script.
-PASSWORD="${DEVOPS_BYPASS_PASSWORD:-123456}"
+command -v jq >/dev/null || {
+    echo "ERROR: jq is required"
+    exit 1
+}
 
-if ! command -v gum >/dev/null 2>&1; then
-    echo "ERROR: gum chưa được cài đặt."
+command -v gum >/dev/null || {
+    echo "ERROR: gum is required"
+    exit 1
+}
+
+command -v shuf >/dev/null || {
+    echo "ERROR: shuf is required"
+    exit 1
+}
+
+LOG_FILE=$(jq -r '.logging.file // "./unlock.log"' "$CONFIG_FILE")
+
+mkdir -p "$(dirname "$LOG_FILE")"
+
+# --------------------------------------------------
+# Logging
+# --------------------------------------------------
+
+log_event() {
+    local event="$1"
+    local questions="$2"
+    local correct="$3"
+    local result="$4"
+
+    printf '%s event=%s questions=%s correct=%s result=%s\n' \
+        "$(date '+%Y-%m-%dT%H:%M:%S%z')" \
+        "$event" \
+        "$questions" \
+        "$correct" \
+        "$result" \
+        >> "$LOG_FILE"
+}
+
+# --------------------------------------------------
+# Determine current schedule
+# --------------------------------------------------
+
+DAY_NUMBER=$(date '+%u')
+
+case "$DAY_NUMBER" in
+    1) DAY="monday" ;;
+    2) DAY="tuesday" ;;
+    3) DAY="wednesday" ;;
+    4) DAY="thursday" ;;
+    5) DAY="friday" ;;
+    6) DAY="saturday" ;;
+    7) DAY="sunday" ;;
+esac
+
+QUESTION_COUNT=$(
+    jq -r \
+        --arg day "$DAY" \
+        --arg time "$(date '+%H:%M')" '
+        .rules[]
+        | select(
+            $day >= .day_from
+            and $day <= .day_to
+            and $time >= .time_from
+            and $time <= .time_to
+        )
+        | .questions
+    ' "$CONFIG_FILE" |
+    head -n 1
+)
+
+
+if [[ -z "$QUESTION_COUNT" ]]; then
+    QUESTION_COUNT=$(jq -r '.default_questions // 3' "$CONFIG_FILE")
+fi
+
+# --------------------------------------------------
+# Validate question count
+# --------------------------------------------------
+
+TOTAL_QUESTIONS=$(jq '.questions | length' "$QUESTIONS_FILE")
+
+if (( QUESTION_COUNT > TOTAL_QUESTIONS )); then
+    echo "ERROR: config requests $QUESTION_COUNT questions,"
+    echo "but only $TOTAL_QUESTIONS questions exist."
     exit 1
 fi
 
-if ! command -v jq >/dev/null 2>&1; then
-    echo "ERROR: jq chưa được cài đặt."
-    exit 1
-fi
+# --------------------------------------------------
+# Select random questions
+# --------------------------------------------------
 
-if [[ ! -f "$QUESTIONS_FILE" ]]; then
-    echo "ERROR: Không tìm thấy $QUESTIONS_FILE"
-    exit 1
-fi
+mapfile -t QUESTION_IDS < <(
+    jq -r '.questions[].id' "$QUESTIONS_FILE" |
+        shuf |
+        head -n "$QUESTION_COUNT"
+)
+
+correct=0
+answered=0
 
 gum style \
     --border double \
     --border-foreground 212 \
     --padding "1 2" \
-    --margin "1 0" \
-    "DevOps Access Check" \
-    "Trả lời các câu hỏi về quy trình nội bộ."
+    "DevOps Knowledge Check" \
+    "$QUESTION_COUNT câu hỏi được chọn ngẫu nhiên"
 
-total=$(jq '.questions | length' "$QUESTIONS_FILE")
-correct=0
+# --------------------------------------------------
+# Ask questions
+# --------------------------------------------------
 
-for ((i=0; i<total; i++)); do
-    question=$(jq -r ".questions[$i].question" "$QUESTIONS_FILE")
+for id in "${QUESTION_IDS[@]}"; do
+
+    question=$(jq -c \
+        --argjson id "$id" \
+        '.questions[] | select(.id == $id)' \
+        "$QUESTIONS_FILE")
+
+    text=$(jq -r '.question' <<< "$question")
 
     mapfile -t options < <(
-        jq -r ".questions[$i].options[]" "$QUESTIONS_FILE"
+        jq -r '.options[]' <<< "$question"
     )
 
-    expected=$(jq -r ".questions[$i].answer" "$QUESTIONS_FILE")
+    expected=$(jq -r '.answer' <<< "$question")
 
     echo
+
     gum style \
         --foreground 212 \
         --bold \
-        "[$((i + 1))/$total] $question"
+        "$text"
 
-    answer=$(gum choose \
-        --height "${#options[@]}" \
-        "${options[@]}")
+    answer=$(gum choose "${options[@]}")
+
+    ((answered+=1))
 
     if [[ "$answer" == "$expected" ]]; then
         ((correct+=1))
-        gum style --foreground 82 "✓ Đúng"
+
+        gum style \
+            --foreground 82 \
+            "✓ Chính xác"
     else
-        gum style --foreground 196 "✗ Không khớp"
+        gum style \
+            --foreground 196 \
+            "✗ Không chính xác"
     fi
 done
 
-echo
+# --------------------------------------------------
+# Authentication result
+# --------------------------------------------------
 
-if [[ "$correct" -eq "$total" ]]; then
+if (( correct == QUESTION_COUNT )); then
+
+    log_event \
+        "knowledge_check" \
+        "$QUESTION_COUNT" \
+        "$correct" \
+        "success"
+
     gum style \
         --border rounded \
         --border-foreground 82 \
         --padding "1 2" \
-        "✓ Đã xác minh qua quy trình nội bộ" \
-        "Bạn có thể tiếp tục vào shell."
+        "✓ Knowledge check passed"
 
     exec "${SHELL:-/bin/bash}" -l
 fi
 
-gum style \
-    --border rounded \
-    --border-foreground 214 \
-    --padding "1 2" \
-    "Knowledge check không hoàn thành" \
-    "Có thể sử dụng phương thức xác thực dự phòng."
+# --------------------------------------------------
+# Password fallback
+# --------------------------------------------------
+
+log_event \
+    "knowledge_check" \
+    "$QUESTION_COUNT" \
+    "$correct" \
+    "fallback"
 
 echo
 
-if [[ -z "$PASSWORD" ]]; then
-    gum style --foreground 196 \
-        "Password fallback chưa được cấu hình."
-    exit 1
-fi
-
-entered_password=$(gum input \
+gum style \
+    --foreground 214 \
+    "Knowledge check chưa hoàn thành."
+    
+password=$(gum input \
     --password \
-    --placeholder "Nhập password để tiếp tục" \
     --prompt "Password: ")
 
-if [[ "$entered_password" == "$PASSWORD" ]]; then
-    gum style --foreground 82 \
-        "✓ Password hợp lệ. Đang mở shell..."
+# TODO:
+# Thay bằng PAM / SSO / Vault / IAM.
+#
+# Ví dụ prototype:
+#
+# if authenticate "$password"; then
+#     ...
+# fi
+
+if [[ "$password" == "${DEVOPS_BYPASS_PASSWORD:-}" ]]; then
+
+    log_event \
+        "password_fallback" \
+        "$QUESTION_COUNT" \
+        "$correct" \
+        "success"
+
+    gum style \
+        --foreground 82 \
+        "✓ Authentication successful"
 
     exec "${SHELL:-/bin/bash}" -l
 else
-    gum style --foreground 196 \
-        "✗ Authentication failed."
+
+    log_event \
+        "password_fallback" \
+        "$QUESTION_COUNT" \
+        "$correct" \
+        "failed"
+
+    gum style \
+        --foreground 196 \
+        "✗ Authentication failed"
+
     exit 1
 fi
