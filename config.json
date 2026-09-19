@@ -1,4 +1,7 @@
 {
+  "authentication": {
+    "password_hash": "$6$u83Y2gcWnYieYZWx$Wbw8Tl4alPl5jUeUm4NCV2.Uf.KyRnpr.yIYKj3eIPVhamjb5gOvMSs5H4A4sn26Kbzsja14Ol1UnhzM6.u441"
+  },
   "calendar": {
     "week": {
       "1": {
@@ -34,21 +37,27 @@
   "rules": [
     {
       "name": "monday_morning",
-      "days": ["monday"],
+      "days": [
+        "monday"
+      ],
       "time_from": "06:00",
       "time_to": "11:59",
       "questions": 5
     },
     {
       "name": "monday_afternoon",
-      "days": ["monday"],
+      "days": [
+        "monday"
+      ],
       "time_from": "12:00",
       "time_to": "17:59",
       "questions": 4
     },
     {
       "name": "friday_evening",
-      "days": ["friday"],
+      "days": [
+        "friday"
+      ],
       "time_from": "18:00",
       "time_to": "23:59",
       "questions": 1

@@ -3,6 +3,9 @@
 run:
 	sh -c ./unlock.sh
 	
+update-pwd:
+	sh -c ./update-password-hash.sh
+	
 PREFIX       := /opt/ai-secure-shell
 BIN_DIR      := /usr/local/bin
 BIN          := $(BIN_DIR)/ai-secure-shell

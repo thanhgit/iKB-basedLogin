@@ -208,7 +208,25 @@ password=$(gum input \
 #     ...
 # fi
 
-if [[ "$password" == "${DEVOPS_BYPASS_PASSWORD:-123456}" ]]; then
+verify_password() {
+    local password="$1"
+    local expected="$2"
+    local actual
+
+    actual=$(
+        printf '%s\n' "$password" |
+        openssl passwd -6 -stdin -salt "$(
+            printf '%s' "$expected" |
+            cut -d '$' -f 3
+        )"
+    )
+
+    [[ "$actual" == "$expected" ]]
+}
+
+PASSWORD_HASH=$(jq -r '.authentication.password_hash' "$CONFIG_FILE")
+
+if verify_password "$password" "$PASSWORD_HASH"; then
 
     log_event \
         "password_fallback" \
@@ -220,7 +238,7 @@ if [[ "$password" == "${DEVOPS_BYPASS_PASSWORD:-123456}" ]]; then
         --foreground 82 \
         "✓ Authentication successful"
 
-    exec "${SHELL:-/bin/bash}" -l
+    # exec "${SHELL:-/bin/bash}" -l
 else
 
     log_event \
