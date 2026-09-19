@@ -67,6 +67,28 @@
         "Không cần approval"
       ],
       "answer": "Production owner"
+    },
+    {
+      "id": 7,
+      "question": "Nguồn SOT (Source of Truth) cho cấu hình Production nằm ở đâu?",
+      "options": [
+        "Repository vault-config",
+        "Local config trên server",
+        "Kênh Slack #devops-chat",
+        "File .env cá nhân"
+      ],
+      "answer": "Repository vault-config"
+    },
+    {
+      "id": 8,
+      "question": "Khi xảy ra P1 Incident, kênh đàm thoại chính là gì?",
+      "options": [
+        "Google Meet cố định trên LARK",
+        "Kênh #incident-p1 trên Slack",
+        "Nhóm Chat Zalo Internal",
+        "Tạo ticket Jira"
+      ],
+      "answer": "Kênh #incident-p1 trên Slack"
     }
   ]
 }
