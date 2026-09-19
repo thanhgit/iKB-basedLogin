@@ -2,6 +2,42 @@
 > Biến rào cản bảo mật thành văn hóa chia sẻ kiến thức trong đội ngũ Engineering
 
 #### Hình ảnh minh họa hệ thống
+* Update password vào file config.json
+<table>
+  <tr>
+    <td>
+      <img src="./media/update-password.png" alt="Ảnh tĩnh" width="400"/>
+    </td>
+    <td>
+      <img src="./media/update-password.gif" alt="File GIF" width="400"/>
+    </td>
+  </tr>
+</table>
+
+* Install chương trình khi đăng nhập vào một user
+<table>
+  <tr>
+    <td>
+      <img src="./media/install-user.png" alt="Ảnh tĩnh" width="400"/>
+    </td>
+    <td>
+      <img src="./media/install-user.gif" alt="File GIF" width="400"/>
+    </td>
+  </tr>
+</table>
+
+* Uninstall chương trình khi đăng nhập vào một user
+<table>
+  <tr>
+    <td>
+      <img src="./media/uninstall-user.png" alt="Ảnh tĩnh" width="400"/>
+    </td>
+    <td>
+      <img src="./media/uninstall-user.gif" alt="File GIF" width="400"/>
+    </td>
+  </tr>
+</table>
+
 * Trường hợp thành công
 <table>
   <tr>
