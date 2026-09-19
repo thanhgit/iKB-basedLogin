@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "title": "DevOps Internal Knowledge Check",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Ai là owner chính của việc deploy production?",
+      "options": [
+        "DevOps",
+        "Backend team",
+        "Product team",
+        "Security team"
+      ],
+      "answer": "DevOps"
+    },
+    {
+      "id": 2,
+      "question": "Trước khi thay đổi configuration của production, bước nào cần thực hiện?",
+      "options": [
+        "Tạo change request",
+        "SSH trực tiếp vào server",
+        "Restart service trước",
+        "Xóa configuration cũ"
+      ],
+      "answer": "Tạo change request"
+    },
+    {
+      "id": 3,
+      "question": "Production incident được điều phối ở channel nào?",
+      "options": [
+        "#devops-incident",
+        "#general",
+        "#development",
+        "#random"
+      ],
+      "answer": "#devops-incident"
+    },
+    {
+      "id": 4,
+      "question": "Source of truth cho deployment configuration hiện tại là gì?",
+      "options": [
+        "Git repository",
+        "Wiki cá nhân",
+        "File trên laptop",
+        "Slack history"
+      ],
+      "answer": "Git repository"
+    },
+    {
+      "id": 5,
+      "question": "Nếu deployment mới gây lỗi production, hành động đầu tiên theo quy trình là gì?",
+      "options": [
+        "Rollback về version ổn định",
+        "Xóa database",
+        "Restart toàn bộ cluster",
+        "Chờ monitoring tự xử lý"
+      ],
+      "answer": "Rollback về version ổn định"
+    },
+    {
+      "id": 6,
+      "question": "Ai có quyền approve production change?",
+      "options": [
+        "Production owner",
+        "Bất kỳ developer nào",
+        "Người tạo ticket",
+        "Không cần approval"
+      ],
+      "answer": "Production owner"
+    }
+  ]
+}
+
