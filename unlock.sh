@@ -2,8 +2,10 @@
 
 set -euo pipefail
 
-QUESTIONS_FILE="${QUESTIONS_FILE:-./questions.json}"
-CONFIG_FILE="${CONFIG_FILE:-./config.json}"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
+QUESTIONS_FILE="${QUESTIONS_FILE:-$SCRIPT_DIR/questions.json}"
+CONFIG_FILE="${CONFIG_FILE:-$SCRIPT_DIR/config.json}"
 
 command -v jq >/dev/null || {
     echo "ERROR: jq is required"
