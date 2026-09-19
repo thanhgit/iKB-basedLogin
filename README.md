@@ -1,6 +1,44 @@
 # Đăng nhập bằng câu hỏi nội bộ
 > Biến rào cản bảo mật thành văn hóa chia sẻ kiến thức trong đội ngũ Engineering
 
+#### Hình ảnh minh họa hệ thống
+* Trường hợp thành công
+<table>
+  <tr>
+    <td>
+      <img src="./media/pass-case.png" alt="Ảnh tĩnh" width="400"/>
+    </td>
+    <td>
+      <img src="./media/pass-demo.gif" alt="File GIF" width="400"/>
+    </td>
+  </tr>
+</table>
+
+* Trường hợp dùng failback: `password`
+<table>
+  <tr>
+    <td>
+      <img src="./media/password-case.png" alt="Ảnh tĩnh" width="400"/>
+    </td>
+    <td>
+      <img src="./media/password-demo.gif" alt="File GIF" width="400"/>
+    </td>
+  </tr>
+</table>
+
+* Trường hợp thất bại
+<table>
+  <tr>
+    <td>
+      <img src="./media/fail-case.png" alt="Ảnh tĩnh" width="400"/>
+    </td>
+    <td>
+      <img src="./media/fail-demo.gif" alt="File GIF" width="400"/>
+    </td>
+  </tr>
+</table>
+
+
 **Tư duy thiết kế**
 * > *Security không nhất thiết phải làm mọi thứ khó hơn*
 
