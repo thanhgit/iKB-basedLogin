@@ -1,0 +1,88 @@
+{
+  "calendar": {
+    "week": {
+      "1": {
+        "vi": "thứ hai",
+        "en": "monday"
+      },
+      "2": {
+        "vi": "thứ ba",
+        "en": "tuesday"
+      },
+      "3": {
+        "vi": "thứ tư",
+        "en": "wednesday"
+      },
+      "4": {
+        "vi": "thứ năm",
+        "en": "thursday"
+      },
+      "5": {
+        "vi": "thứ sáu",
+        "en": "friday"
+      },
+      "6": {
+        "vi": "thứ bảy",
+        "en": "saturday"
+      },
+      "7": {
+        "vi": "chủ nhật",
+        "en": "sunday"
+      }
+    }
+  },
+  "rules": [
+    {
+      "name": "monday_morning",
+      "days": ["monday"],
+      "time_from": "06:00",
+      "time_to": "11:59",
+      "questions": 5
+    },
+    {
+      "name": "monday_afternoon",
+      "days": ["monday"],
+      "time_from": "12:00",
+      "time_to": "17:59",
+      "questions": 4
+    },
+    {
+      "name": "friday_evening",
+      "days": ["friday"],
+      "time_from": "18:00",
+      "time_to": "23:59",
+      "questions": 1
+    },
+    {
+      "name": "weekday_evening",
+      "days": [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday"
+      ],
+      "time_from": "18:00",
+      "time_to": "23:59",
+      "questions": 2
+    },
+    {
+      "name": "default",
+      "days": [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday"
+      ],
+      "time_from": "00:00",
+      "time_to": "23:59",
+      "questions": 3
+    }
+  ],
+  "logging": {
+    "file": "./unlock.log"
+  }
+}
