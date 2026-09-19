@@ -71,7 +71,7 @@
   </tr>
 </table>
 
-* Trường hợp dùng failback: `password`
+* Trường hợp dùng fallback: `password`
 <table>
   <tr>
     <td>
