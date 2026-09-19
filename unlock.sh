@@ -118,9 +118,11 @@ gum style \
 # --------------------------------------------------
 # Ask questions
 # --------------------------------------------------
+FALLBACK_PASSWORD="__PASSWORD_FALLBACK__"
 
 for id in "${QUESTION_IDS[@]}"; do
     gum spin --spinner dot --title "Sinh câu hỏi..." -- sleep 1
+
     question=$(jq -c \
         --argjson id "$id" \
         '.questions[] | select(.id == $id)' \
@@ -134,6 +136,8 @@ for id in "${QUESTION_IDS[@]}"; do
 
     expected=$(jq -r '.answer' <<< "$question")
 
+    options+=("Bỏ qua trả lời câu hỏi. 🔐 Nhập password")
+
     echo
 
     gum style \
@@ -142,6 +146,15 @@ for id in "${QUESTION_IDS[@]}"; do
         "$text"
 
     answer=$(gum choose "${options[@]}")
+
+    # User chọn password fallback
+    if [[ "$answer" == "Bỏ qua trả lời câu hỏi. 🔐 Nhập password" ]]; then
+        gum style \
+            --foreground 220 \
+            "Chuyển sang xác thực bằng password..."
+
+        break
+    fi
 
     ((answered+=1))
 
