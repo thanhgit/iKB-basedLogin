@@ -120,7 +120,7 @@ gum style \
 # --------------------------------------------------
 
 for id in "${QUESTION_IDS[@]}"; do
-
+    gum spin --spinner dot --title "Sinh câu hỏi..." -- sleep 1
     question=$(jq -c \
         --argjson id "$id" \
         '.questions[] | select(.id == $id)' \
